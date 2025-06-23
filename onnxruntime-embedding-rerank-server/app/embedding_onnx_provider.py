@@ -1,8 +1,7 @@
 from onnxruntime import InferenceSession
-from transformers import AutoTokenizer
+from transformers import XLMRobertaTokenizer
 from concurrent.futures import ThreadPoolExecutor
 from typing import List
-from log_config import logger
 import numpy as np
 import os
 
@@ -13,7 +12,7 @@ class EmbeddingONNXProvider():
         if not os.path.isfile(embed_model_path):
             raise ValueError(f"{embed_model_path} 文件不存在")
         self.workers = kwargs.get('workers', 8)
-        self._tokenizer = AutoTokenizer.from_pretrained(embed_path)
+        self._tokenizer = XLMRobertaTokenizer.from_pretrained(embed_path)
         providers = ['CPUExecutionProvider']
         self._session = InferenceSession(embed_model_path, providers=providers)
         self.thread_pool = ThreadPoolExecutor(max_workers=self.workers)

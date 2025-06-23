@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Request, HTTPException
-from typing import List,Union,Optional
-from pydantic import BaseModel,Field
-from uuid import uuid4
-from log_config import logger
+from fastapi import APIRouter, Request
+from typing import List,Union
+from pydantic import BaseModel
 from model_service import EmbeddingService
 import time
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 embedding_router = APIRouter(tags=['Embedding'])
 

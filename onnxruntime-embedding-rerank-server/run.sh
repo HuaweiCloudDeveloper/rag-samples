@@ -1,4 +1,4 @@
-nohup python -u app/main.py > app.log 2>&1 &
+nohup uv run app/main.py > app.log 2>&1 &
 PID1=$!
 
 # 生成close.sh脚本，写入kill命令
