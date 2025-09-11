@@ -1,10 +1,13 @@
 from fastapi import APIRouter, Request
 from typing import List
-from pydantic import BaseModel,Field
+from pydantic import BaseModel
 from uuid import uuid4
-from log_config import logger
 from model_service import RerankService
 import time
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 rerank_router = APIRouter(tags=['Rerank'])
 
@@ -40,7 +43,7 @@ def text_rerank(request: Request,rerank_request:RerankRequest) -> RerankResponse
     results = engine.execute(query,documents,top_n,return_documents)
     
     # usage = Usage(prompt_tokens=len(documents),total_tokens=total_tokens)
-    logger.info("请求结果:\n%s\n耗时 %.4f ms",results,(time.perf_counter() - start_time) * 1000)
+    logger.info("请求耗时 %.4f ms,返回结果:\n%s",(time.perf_counter() - start_time) * 1000, results)
     rerankResult = [
         RerankResult(
             index = result['id'],

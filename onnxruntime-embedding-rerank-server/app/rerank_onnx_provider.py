@@ -1,8 +1,7 @@
 import onnxruntime as ort
-from transformers import AutoTokenizer
+from transformers import XLMRobertaTokenizer
 from typing import List
 from copy import deepcopy
-from log_config import logger
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import os
@@ -21,7 +20,7 @@ class RerankONNXProvider():
         # 判断文件是否存在
         if not os.path.isfile(rerank_model_path):
             raise ValueError(f"{rerank_model_path} 文件不存在")
-        self._tokenizer = AutoTokenizer.from_pretrained(rerank_path)
+        self._tokenizer = XLMRobertaTokenizer.from_pretrained(rerank_path)
         self.sep_id = self._tokenizer.sep_token_id
         self.overlap_tokens = kwargs.get('overlap_tokens', 80)
         self.max_length = kwargs.get('max_length', 512)
@@ -29,7 +28,6 @@ class RerankONNXProvider():
         providers = ['CPUExecutionProvider']
         self.session = ort.InferenceSession(rerank_model_path, providers=providers)
         self.thread_pool = ThreadPoolExecutor(max_workers=self.workers)
-
 
     def tokenize_preproc(self, query: str, passages: List[str]):
 

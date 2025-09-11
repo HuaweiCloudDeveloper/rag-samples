@@ -1,0 +1,36 @@
+services:
+  llamacpp-embedding-server:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: llamacpp-embedding-server
+    command: --embedding --pooling mean --verbose-prompt
+    restart: always
+    ports:
+      - 8081:8080
+    volumes:
+      - /home/models/bge-m3-GGUF:/models
+    environment:
+      LLAMA_ARG_MODEL: /models/bge-m3-Q8_0.gguf
+      LLAMA_ARG_CTX_SIZE: 8192
+      LLAMA_ARG_N_PARALLEL: 8
+      LLAMA_ARG_PORT: 8080
+      LLAMA_ARG_UBATCH: 8192
+      LLAMA_ARG_N_GPU_LAYERS_DRAFT: 0
+
+  llamacpp-rerank-server:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: llamacpp-rerank-server
+    command: --reranking --pooling rank
+    restart: always
+    ports:
+      - 8082:8080
+    volumes:
+      - /home/models/bge-reranker-v2-m3-GGUF:/models
+    environment:
+      LLAMA_ARG_MODEL: /models/bge-reranker-v2-m3-Q8_0.gguf
+      LLAMA_ARG_CTX_SIZE: 8192
+      LLAMA_ARG_N_PARALLEL: 8
+      LLAMA_ARG_PORT: 8080
+      LLAMA_ARG_BATCH: 8192
+      LLAMA_ARG_UBATCH: 8192
+      LLAMA_ARG_FLASH_ATTN: enable
+      LLAMA_ARG_N_GPU_LAYERS_DRAFT: 0
